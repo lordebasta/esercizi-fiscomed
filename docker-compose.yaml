@@ -3,13 +3,11 @@ services:
     image: postgres:14.5
     restart: always
     environment:
-      POSTGRES_DATABASE: dev
+      POSTGRES_DB: dev
       POSTGRES_USER: app
-      POSTGRES_PASSWORD: password123
+      POSTGRES_PASSWORD: pass
     ports:
       - 5432:5432
-    volumes:
-      - pgdata:/var/lib/postgresql/data
 
   db-test:
     image: postgres:14.5
@@ -17,17 +15,12 @@ services:
     environment:
       POSTGRES_DB: test
       POSTGRES_USER: app
-      POSTGRES_PASSWORD: password123
+      POSTGRES_PASSWORD: pass
     ports:
       - 5433:5432
-    volumes:
-      - pgdata:/var/lib/postgresql/data
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
-
-volumes:
-  pgdata:
