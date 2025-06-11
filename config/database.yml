@@ -1,0 +1,22 @@
+defaults: &defaults
+  adapter: postgresql
+  encoding: unicode
+  username: app
+  password: password123
+
+development:
+  <<: *defaults
+  database: dev
+  host: localhost:5432
+
+test:
+  <<: *defaults
+  database: test
+  host: localhost:5433
+
+production:
+  <<: *defaults
+  username: <%= ENV['DATABASE_USERNAME'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+  host: <%= ENV['DATABASE_HOST'] %>
+  database: prod
