@@ -1,11 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  title: MyText
-  description: MyText
-  completed: false
+  title: A
+  completed: true
 
 two:
-  title: MyText
-  description: MyText
+  title: B
+  description: This is a test task.
+  completed: false
+
+three:
+  title: C
+  description: This is another test task.
   completed: false

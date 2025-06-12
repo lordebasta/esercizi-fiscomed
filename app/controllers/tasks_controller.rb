@@ -3,12 +3,24 @@ class TasksController < ApplicationController
 
   # GET /tasks
   def index
-    @tasks = Task.all
+    if params[:page].present?
+      page = params[:page].to_i
+      if page < 1
+        page = 1
+      end
+      page_size = params[:page_size] || 10
+      if page_size < 1
+        render json: {error: "`page_size` can't be less than 1."}, status: 400
+      end
+      @tasks = Task.limit(page_size).offset((page-1)*page_size)
+    else
+      @tasks = Task.all
+    end
 
     render json: @tasks
   end
 
-  # GET /tasks/1
+  # GET /tasks/:id
   def show
     render json: @task
   end
@@ -39,12 +51,10 @@ class TasksController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_task
       @task = Task.find(params.expect(:id))
     end
 
-    # Only allow a list of trusted parameters through.
     def task_params
       params.expect(task: [ :title, :description, :completed ])
     end
