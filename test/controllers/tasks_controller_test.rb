@@ -29,7 +29,26 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
       post tasks_url, params: { task: { completed: @task.completed, description: @task.description, title: @task.title } }, as: :json
     end
 
-    assert_response :created
+    new_id = JSON.parse(response.body)["id"]
+    new_task = Task.find(new_id)
+    assert_response :created, "Couldn't create a new task"
+    assert @task == new_task, "Created task is different from the one sent in request"
+  end
+
+  test "should create task with only a title" do
+    assert_difference("Task.count") do
+      post tasks_url, params: { task: { title: "Ahia" } }, as: :json
+    end
+
+    new_id = JSON.parse(response.body)["id"]
+    new_task = Task.find(new_id)
+    assert_response :created, "Couldn't create a new task"
+    assert Task.new(title: "Ahia") == new_task, "Created task is different from the one sent in request"
+  end
+  
+  test "attempt to create task with no title" do
+    post tasks_url, params: { task: { completed: @task.completed, description: @task.description } }, as: :json
+    assert_response 400, "Created a task without a title"
   end
 
   test "should show task" do

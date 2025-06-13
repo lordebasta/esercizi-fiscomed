@@ -1,23 +1,19 @@
 ### Version
 
 Ruby: 3.4.4  
-Rails: 8.0.2  
-#TODO: For better portability I should study if there is a Ruby Version Manager and how it wants this information in a project.
+Rails: 8.0.2
 
-### System dependencies
+### How to run locally
 
-### Configuration
+Check Ruby and Rails are [installed](https://guides.rubyonrails.org/install_ruby_on_rails.html), clone the repository and run `bundle install` to install all Gemfiles.
 
-### Database creation
+To run the dev and test **databases**, be sure to have docker installed and run `docker compose up -d`. An adminer service will also spin up allowing you to examine the dbs easily.  
+After that, you must run `rails db:migrate`.  
+To run the development server execute `rails server`.
 
-**Tasks**  
-`rails g scaffold Task title:text! description:text completed:boolean!`  
+To run the **tests**, execute: `rails test`.
+
+### Notes on development
+
+I created the resource `Task` with `rails g scaffold Task title:text! description:text completed:boolean!`.  
 I left the timestamp fields voluntarily. Added manually `default: false` in `completed` field.
-
-### Database initialization
-
-### How to run the test suite
-
-### Services (job queues, cache servers, search engines, etc.)
-
-### Deployment instructions
