@@ -10,7 +10,6 @@ default: &default
   password: pass
   host: localhost
 
-
 development:
   <<: *default
   database: dev
