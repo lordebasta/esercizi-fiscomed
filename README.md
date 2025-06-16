@@ -11,6 +11,14 @@ To start the **databases** locally, be sure to have docker installed and run `do
 After that, you must run `rails db:migrate` for the dev db or `rails db:migrate RAILS_ENV=production` for the prod db.  
 To run the development server execute `rails server` for runnning in development or `rails server -e production` for running in production.
 
+To run in production, these env variables are required:
+
+- DATABASE_PASSWORD
+- DATABASE_HOST
+- DATABASE_PORT
+
+In the repository, `.env.production` stores the values required to run with the database "db-prod" defined in `docker-compose.yaml`.
+
 To run the **tests**, execute: `rails test`.
 
 ### API documentation
