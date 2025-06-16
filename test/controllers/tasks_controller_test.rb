@@ -11,18 +11,38 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
     assert_equal Task.count, JSON.parse(response.body).length
   end
 
-  # test "pagination works" do
-  #   get tasks_url, as: :json, params: { page: 0, page_size: -1 } 
-  #   assert_response 400
+  test "should filter by title" do
+    get tasks_url(title: "A"), as: :json
+    assert_response :success
+    results = JSON.parse(response.body)
+    assert results.all? { |t| t["title"].downcase.include?("a") }
+    expected_count = Task.where("title ILIKE ?", "%a%").count
+    assert_equal expected_count, results.length
+  end
 
-  #   get tasks_url,  params: { page: 1, page_size: 2 }, as: :json
-  #   assert_response :success
-  #   assert_equal 2, JSON.parse(response.body).length
+  test "should filter by completed" do
+    get tasks_url(completed: true), as: :json
+    assert_response :success
+    results = JSON.parse(response.body)
+    assert results.all? { |t| t["completed"] == true }
+    assert 1, results.length
+  end
 
-  #   get tasks_url, as: :json, params: { page: 2, page_size: 2 } 
-  #   assert_response :success
-  #   assert_equal 1, JSON.parse(response.body).length
-  # end
+  test "should paginate filtered results" do
+    get tasks_url( title: "a", page: 1, page_size: 5 ), as: :json
+    assert_response :success
+    results = JSON.parse(response.body)
+    assert results.length <= 5
+
+    get tasks_url( title: "a", page: 2, page_size: 5 ), as: :json
+    assert_response :success
+    results2 = JSON.parse(response.body)
+    assert results2.length <= 5
+    # Ensure no overlap between pages
+    ids1 = results.map { |t| t["id"] }
+    ids2 = results2.map { |t| t["id"] }
+    assert (ids1 & ids2).empty?
+  end
 
   test "should create task" do
     assert_difference("Task.count") do

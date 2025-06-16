@@ -13,3 +13,12 @@ three:
   title: C
   description: This is another test task.
   completed: false
+
+four:
+  title: Alpha
+
+<% 200.times do |n| %>
+task_<%= n %>:
+  title: <%= "task#{n}" %>
+  completed: <%= n % 3 == 0 ? true : false %>
+<% end %>

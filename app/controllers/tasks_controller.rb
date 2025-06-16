@@ -3,21 +3,20 @@ class TasksController < ApplicationController
 
   # GET /tasks
   def index
-    if params[:page].present?
-      page = params[:page].to_i
-      if page < 1
-        page = 1
-      end
-      page_size = params[:page_size] || 10
-      if page_size < 1
-        render json: {error: "`page_size` can't be less than 1."}, status: 400
-      end
-      @tasks = Task.limit(page_size).offset((page-1)*page_size)
-    else
-      @tasks = Task.all
+    tasks = Task.all
+
+    # Filter
+    tasks = tasks.where("title ILIKE ?", "%" + tasks.sanitize_sql_like(params[:title]) + "%") if params[:title].present?
+    tasks = tasks.where(completed: params[:completed]) if params[:completed].present?
+
+    # Pagination
+    if params[:page].present? 
+      page = params[:page].to_i > 0 ? params[:page].to_i : 1
+      page_size = params[:page_size].to_i > 0 ? params[:page_size].to_i : 2
+      tasks = tasks.limit(page_size).offset((page - 1) * page_size)
     end
 
-    render json: @tasks
+    render json: tasks
   end
 
   # GET /tasks/:id
@@ -27,12 +26,12 @@ class TasksController < ApplicationController
 
   # POST /tasks
   def create
-    @task = Task.new(task_params)
+    task = Task.new(task_params)
 
-    if @task.save
-      render json: @task, status: :created, location: @task
+    if task.save
+      render json: task, status: :created, location: task
     else
-      render json: @task.errors, status: :unprocessable_entity
+      render json: task.errors, status: :unprocessable_entity
     end
   end
 
