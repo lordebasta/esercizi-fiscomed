@@ -48,7 +48,7 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
   
   test "attempt to create task with no title" do
     post tasks_url, params: { task: { completed: @task.completed, description: @task.description } }, as: :json
-    assert_response 400, "Created a task without a title"
+    assert_response 422, "Created a task without a title"
   end
 
   test "should show task" do
